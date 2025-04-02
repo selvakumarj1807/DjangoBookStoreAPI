@@ -1,0 +1,88 @@
+# Postman API Testing - Bookstore API
+http://127.0.0.1:8000/api/books/
+## 1. Create a New Book (POST /api/books/)
+{
+  "title": "The Pragmatic Programmer",
+  "author": "Andrew Hunt",
+  "genre": "Programming",
+  "publication_year": 1999,
+  "price": 39.99,
+  "stock_quantity": 10,
+  "rating": 4.8
+}
+
+## 2. Get All Books (GET /api/books/)
+
+GET http://127.0.0.1:8000/api/books/
+
+## 3. Get a Single Book by ID (GET /api/books/1/)
+
+GET http://127.0.0.1:8000/api/books/1/
+
+## 4. Get Books by Author (GET /api/books/get_by_author/?author=Robert C. Martin)
+
+GET http://127.0.0.1:8000/api/books/get_by_author/?author=Robert C. Martin
+
+## 5. Get Books by Genre (GET /api/books/get_by_genre/?genre=Programming)
+
+GET http://127.0.0.1:8000/api/books/get_by_genre/?genre=Programming
+
+## 6. Update a Book (PUT /api/books/1/)
+{
+  "title": "The Pragmatic Programmer (Updated Edition)",
+  "author": "Andrew Hunt",
+  "genre": "Programming",
+  "publication_year": 1999,
+  "price": 41.99,
+  "stock_quantity": 8,
+  "rating": 4.9
+}
+
+## 7. Partially Update a Book (PATCH /api/books/1/)
+{
+  "price": 35.99
+}
+
+## 8. Delete a Book (DELETE /api/books/1/)
+
+DELETE http://127.0.0.1:8000/api/books/1/
+
+## Additional Sample Books
+[
+  {
+    "title": "The Pragmatic Programmer",
+    "author": "Andrew Hunt",
+    "genre": "Programming",
+    "publication_year": 1999,
+    "price": 39.99,
+    "stock_quantity": 10,
+    "rating": 4.8
+  },
+  {
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "genre": "Programming",
+    "publication_year": 2008,
+    "price": 45.99,
+    "stock_quantity": 15,
+    "rating": 4.7
+  },
+  {
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "genre": "Self-Help",
+    "publication_year": 2018,
+    "price": 20.99,
+    "stock_quantity": 30,
+    "rating": 4.9
+  },
+  {
+    "title": "The Lean Startup",
+    "author": "Eric Ries",
+    "genre": "Business",
+    "publication_year": 2011,
+    "price": 25.99,
+    "stock_quantity": 20,
+    "rating": 4.5
+  }
+]
