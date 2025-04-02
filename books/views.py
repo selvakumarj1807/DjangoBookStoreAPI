@@ -1,11 +1,15 @@
 # Create your views here.
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Book
 from .serializers import BookSerializer
+
+def book_list_view(request):
+    books = Book.objects.all()
+    return render(request, 'books_list.html', {'books': books})
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
