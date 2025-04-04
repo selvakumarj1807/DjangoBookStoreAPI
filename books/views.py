@@ -1,5 +1,3 @@
-# Create your views here.
-
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, status
@@ -47,5 +45,74 @@ class BookViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         
-        # ✅ Return validation errors properly
         return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, pk=None):
+        """Get book by ID"""
+        book = Book.objects.filter(pk=pk).first()
+        if not book:
+            return Response({"message": "No Data"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BookSerializer(book)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_by_title(self, request):
+        """Get books by title"""
+        title = request.query_params.get('title', None)
+        if not title:
+            return Response({'error': 'Title parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        books = Book.objects.filter(title__icontains=title)
+        if not books.exists():
+            return Response({"message": "No Data"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_by_author(self, request):
+        """Get books by author"""
+        author = request.query_params.get('author', None)
+        if not author:
+            return Response({'error': 'Author parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        books = Book.objects.filter(author__icontains=author)
+        if not books.exists():
+            return Response({"message": "No Data"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_by_price(self, request):
+        """Get books by price"""
+        price = request.query_params.get('price', None)
+        if not price:
+            return Response({'error': 'Price parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            price = float(price)
+        except ValueError:
+            return Response({'error': 'Price must be a valid number'}, status=status.HTTP_400_BAD_REQUEST)
+
+        books = Book.objects.filter(price=price)
+        if not books.exists():
+            return Response({"message": "No Data"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_by_genre(self, request):
+        """Get books by genre"""
+        genre = request.query_params.get('genre', None)
+        if not genre:
+            return Response({'error': 'Genre parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        books = Book.objects.filter(genre__icontains=genre)
+        if not books.exists():
+            return Response({"message": "No Data"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
