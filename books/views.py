@@ -1,5 +1,6 @@
 # Create your views here.
 
+from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -19,23 +20,25 @@ class BookViewSet(viewsets.ModelViewSet):
         """Create a new book"""
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({"error": "A book with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # ✅ Return validation errors properly
         return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None):
         """Update an existing book"""
         book = get_object_or_404(Book, pk=pk)
         serializer = BookSerializer(book, data=request.data, partial=False)
+
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        
-        # ✅ Return validation errors properly
-        return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
+        return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
     def partial_update(self, request, pk=None):
         """Partially update a book"""
         book = get_object_or_404(Book, pk=pk)

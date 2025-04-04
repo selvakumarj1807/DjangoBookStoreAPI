@@ -41,4 +41,14 @@ class BookSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Rating should be a float between 1 and 5.")
         return value
     
+    def validate_email(self, value):
+        """Ensure email is unique except for the current instance being updated."""
+        book_id = self.instance.id if self.instance else None  # Get current book ID if updating
+
+        # Check if any other book has the same email
+        if Book.objects.filter(email=value).exclude(id=book_id).exists():
+            raise serializers.ValidationError("A book with this email already exists.")
+
+        return value
+    
     
