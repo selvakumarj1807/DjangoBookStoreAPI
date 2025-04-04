@@ -116,3 +116,10 @@ class BookViewSet(viewsets.ModelViewSet):
 
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
+    
+    def destroy(self, request, pk=None):
+        """Delete a book"""
+        book = get_object_or_404(Book, pk=pk)
+        book.delete()
+        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
